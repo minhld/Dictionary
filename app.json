@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Dictionary",
+    "slug": "Dictionary",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "Dictionary"
+}
