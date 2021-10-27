@@ -1,21 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { Ionicons, Icon } from 'react-native-elements';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import Home from './pages/Home';
+import Settings from './pages/Settings';
+import Words from './pages/Words';
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Drawer.Navigator
+        drawerType="front"
+        initialRouteName="Home"
+        screenOptions={{
+          drawerActiveTintColor: '#1f3c69',
+          drawerActiveBackgroundColor: '#eee',
+          drawerInactiveTintColor: '#666',
+          labelStyle: {
+            marginLeft: 0
+          }
+        }}>
+        <Drawer.Screen 
+          name="Dictionary" 
+          component={Home} 
+          options={{
+            title: 'English - Vietnamese',
+            drawerIcon: ({focused, size}) => (
+              <Icon
+              name='home'
+              color='#1f3c69' />
+            ),
+         }}/>
+        <Drawer.Screen 
+          name="Used Words" 
+          component={Words} 
+          options={{
+            drawerIcon: ({focused, size}) => (
+              <Icon
+              name='comment'
+              color='#1f3c69' />
+            ),
+         }}/>
+        <Drawer.Screen 
+          name="Settings" 
+          component={Settings} 
+          options={{
+            drawerIcon: ({focused, size}) => (
+              <Icon
+              name='settings'
+              color='#1f3c69' />
+            ),
+         }}/> 
+      </Drawer.Navigator>
+    </NavigationContainer>
+    
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
