@@ -3,8 +3,8 @@ import { Button, Platform, TextInput } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 const Settings = ({ navigation }) => {
-  const dbFile = 'https://drive.google.com/file/d/1DYcAT58LjNfqaIuDHLuo0zzBO07y_kVh';
-  
+  const dbFileUrl = 'https://drive.google.com/file/d/1DYcAT58LjNfqaIuDHLuo0zzBO07y_kVh';
+  const dbFilename = 'ev.db';
   /**
    * call after rendering - to update states
    */
@@ -17,20 +17,9 @@ const Settings = ({ navigation }) => {
   });
 
   const downloadFile = () => {
-    RNFetchBlob
-      .config({                
-          path: dirs.DocumentDir + '/' + fileName,
-          fileCache: true,
-      })
-      .fetch('GET', uri, {
-          //some headers ..
-      })
-      .then((res) => {
-          RNFetchBlob.ios.openDocument(res.data);
-      })
-      .catch((e) => {
-          console.log('Error en el fetch: ', e);
-      });
+
+   
+
   };
 
   return (
@@ -40,7 +29,7 @@ const Settings = ({ navigation }) => {
           style={styles.dbText}>Data File:</Text>
         <TextInput 
           style={styles.dbFileTextBox}
-          value={dbFile}
+          value={dbFileUrl}
           />
       </View>
       <Button 
