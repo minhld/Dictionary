@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Platform, TextInput } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 const Settings = ({ navigation }) => {
   const dbFileUrl = 'https://drive.google.com/file/d/1DYcAT58LjNfqaIuDHLuo0zzBO07y_kVh';
@@ -17,7 +18,13 @@ const Settings = ({ navigation }) => {
   });
 
   const downloadFile = () => {
-
+    FileSystem.downloadAsync(dbFileUrl,
+      FileSystem.documentDirectory + 'dbFilename'
+    ).then(({ uri }) => {
+      console.log('Db file has been downloaded to ', uri);
+    }).catch(error => {
+      console.error(error);
+    });
    
 
   };
