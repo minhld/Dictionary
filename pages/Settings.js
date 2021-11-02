@@ -2,43 +2,77 @@ import React, { useState, useEffect } from 'react';
 import { Button, Platform, TextInput } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import { ProgressBar, Colors } from 'react-native-paper';
 
 const Settings = ({ navigation }) => {
-  const dbFileUrl = 'https://drive.google.com/file/d/1DYcAT58LjNfqaIuDHLuo0zzBO07y_kVh';
-  const dbFilename = 'ev.db';
+  const DB_URL = 'https://cdn.mos.cms.futurecdn.net/snbrHBRigvvzjxNGuUtcck-1024-80.jpg'; //'https://drive.google.com/file/d/1DYcAT58LjNfqaIuDHLuo0zzBO07y_kVh';
+  const DB_FILENAME = 'ev.db';
+  const [fileExist, setFileExist] = useState(false); 
+  const [downloadInfo, setDownloadInfo] = useState(''); 
+  const [downloadPercentage, setDownloadPercentage] = useState(0); 
+  const [isDownloading, setIsDownloading] = useState(false);
   /**
    * call after rendering - to update states
    */
   useEffect(() => {
-    // Platform.OS === 'ios' ? ;
+    checkFileExist();
+
     return () => {
       // clean up previous render
       
     };
   });
 
-  const downloadFile = () => {
-    FileSystem.downloadAsync(dbFileUrl,
-      FileSystem.documentDirectory + 'dbFilename'
-    ).then(({ uri }) => {
-      console.log('Db file has been downloaded to ', uri);
-    }).catch(error => {
-      console.error(error);
-    });
-   
+  const checkFileExist = async () => {
+    const downloadFilePath = FileSystem.documentDirectory + DB_FILENAME;
+    const dbFileInfo = await FileSystem.getInfoAsync(downloadFilePath, {});
+    setDownloadInfo(dbFileInfo.exists ? 'File downloaded' : 'File has not been downloaded');
+  };
 
+  const downloadFile = async () => {
+    setIsDownloading(true);
+    const downloadFilePath = FileSystem.documentDirectory + DB_FILENAME;
+    const downloadResumable = FileSystem.createDownloadResumable(
+      DB_URL,
+      downloadFilePath,
+      {},
+      updateProgress
+    );
+
+    try {
+      const { uri } = await downloadResumable.downloadAsync();
+      console.log("Finished downloading ", uri);
+    } catch (e) {
+      console.error(e);
+    }
+    setIsDownloading(false);
+  };
+
+  const updateProgress = downloadProgress => {
+    const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+    console.log(JSON.stringify(downloadProgress));
+    setDownloadPercentage(progress);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.dbTextView}>
-        <Text
-          style={styles.dbText}>Data File:</Text>
+        <Text style={styles.dbText}>
+          Data File:
+        </Text>
         <TextInput 
           style={styles.dbFileTextBox}
-          value={dbFileUrl}
+          value={DB_URL}
           />
       </View>
+      <ProgressBar 
+        progress={downloadPercentage} 
+        color={'#1f3c69'} 
+        visible={isDownloading}
+        style={styles.downloadProgress} />
+      <Text style={styles.dbDownloadProgress}>
+        {downloadInfo}
+      </Text>  
       <Button 
         style={styles.downloadBtn}
         title='Download'
@@ -60,6 +94,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flex: 1,
   },
+  downloadProgress: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
   dbFileTextBox: {
     height: 35,
     flex: 5,
@@ -75,6 +113,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#aaa',
     borderWidth: 1,
+  },
+  dbDownloadProgress: {
+    height: 80,
+    marginTop: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    borderColor: '#ccc',
+    color: '#fc6203'
   }
 });
 
