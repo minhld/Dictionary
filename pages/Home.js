@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
+import * as db from './utils/DbUtils';
 
 const Home = ({ navigation }) => {
   const [keyword, setKeyWord] = useState('');
+
+  useEffect(() => {
+    db.search(keyword);
+  });
 
   return (
     <View>

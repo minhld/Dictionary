@@ -4,9 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { ProgressBar, Colors } from 'react-native-paper';
 
+const Constants = require('./utils/Constants');
+
 const Settings = ({ navigation }) => {
-  const DB_URL = 'https://dl.dropboxusercontent.com/s/3vfyfpg8f37zdz7/ev.db';
-  const DB_FILENAME = 'ev.db';
   const [fileExist, setFileExist] = useState(false); 
   const [downloadInfo, setDownloadInfo] = useState(''); 
   const [downloadPercentage, setDownloadPercentage] = useState(0); 
@@ -24,16 +24,16 @@ const Settings = ({ navigation }) => {
   });
 
   const checkFileExist = async () => {
-    const downloadFilePath = FileSystem.documentDirectory + DB_FILENAME;
+    const downloadFilePath = FileSystem.documentDirectory + Constants.DB_FILENAME;
     const dbFileInfo = await FileSystem.getInfoAsync(downloadFilePath, {});
-    setDownloadInfo(dbFileInfo.exists ? 'File downloaded' : 'File has not been downloaded');
+    setDownloadInfo(dbFileInfo.exists ? 'File is downloaded' : 'File has not been downloaded');
   };
 
   const downloadFile = async () => {
     setIsDownloading(true);
-    const downloadFilePath = FileSystem.documentDirectory + DB_FILENAME;
+    const downloadFilePath = FileSystem.documentDirectory + Constants.DB_FILENAME;
     const downloadResumable = FileSystem.createDownloadResumable(
-      DB_URL,
+      Constants.DB_URL,
       downloadFilePath,
       {},
       updateProgress
@@ -62,7 +62,7 @@ const Settings = ({ navigation }) => {
         </Text>
         <TextInput 
           style={styles.dbFileTextBox}
-          value={DB_URL}
+          value={Constants.DB_URL}
           />
       </View>
       <ProgressBar 
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   dbDownloadProgress: {
-    height: 80,
+    height: 50,
     marginTop: 5,
     borderWidth: 1,
     borderRadius: 5,
