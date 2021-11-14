@@ -5,7 +5,7 @@ import * as FileSystem from 'expo-file-system';
 import { ProgressBar, Colors } from 'react-native-paper';
 
 const Settings = ({ navigation }) => {
-  const DB_URL = 'https://cdn.mos.cms.futurecdn.net/snbrHBRigvvzjxNGuUtcck-1024-80.jpg'; //'https://drive.google.com/file/d/1DYcAT58LjNfqaIuDHLuo0zzBO07y_kVh';
+  const DB_URL = 'https://dl.dropboxusercontent.com/s/3vfyfpg8f37zdz7/ev.db';
   const DB_FILENAME = 'ev.db';
   const [fileExist, setFileExist] = useState(false); 
   const [downloadInfo, setDownloadInfo] = useState(''); 
