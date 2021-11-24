@@ -1,27 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import * as db from './utils/DbUtils';
 
-const Home = ({ navigation }) => {
-  const [keyword, setKeyWord] = useState('');
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      keyword: null,
+    };
+  }
 
-  useEffect(() => {
-    db.search(keyword);
-  });
+  componentDidMount = () => {
+    db.loadDb();
+  };
 
-  return (
-    <View>
-      <TextInput
-        style={styles.input}
-        placeholder="Keywords"
-        onChangeText={text => setKeyWord(text)}/>
+  componentWillUnmount = () => {
 
-      <Text style={{padding: 10, fontSize: 42}}>
-        {keyword}
-      </Text>  
-    </View>
-  );
-};
+  };
+  
+  searchWord = (keywords) => {
+    db.search(keywords, 10);
+  };
+
+  render() {
+    return (
+      <View>
+        <TextInput
+          style={styles.input}
+          placeholder="Keywords" 
+          onChangeText={text => this.searchWord(text)}/> 
+
+        <Text style={{padding: 10, fontSize: 42}}>
+          {/* {keyword} */}
+        </Text>  
+      </View>
+    ); 
+  }
+}
 
 const styles = StyleSheet.create({
   input: {
