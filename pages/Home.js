@@ -15,10 +15,10 @@ class Home extends React.Component {
   };
 
   componentWillUnmount = () => {
-
+    db.unloadDb();
   };
   
-  searchWord = (keywords) => {
+  searchWord = async (keywords) => {
     db.search(keywords, 10);
   };
 
