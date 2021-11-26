@@ -19,19 +19,24 @@ const Settings = ({ navigation }) => {
 
     return () => {
       // clean up previous render
-      
     };
   });
 
   const checkFileExist = async () => {
-    const downloadFilePath = FileSystem.documentDirectory + Constants.DB_FILENAME;
+    const downloadFilePath = Constants.getDbFilePath();
     const dbFileInfo = await FileSystem.getInfoAsync(downloadFilePath, {});
     setDownloadInfo(dbFileInfo.exists ? 'File is downloaded' : 'File has not been downloaded');
   };
 
   const downloadFile = async () => {
     setIsDownloading(true);
-    const downloadFilePath = FileSystem.documentDirectory + Constants.DB_FILENAME;
+    const dbPath = Constants.getDbPath(); 
+    // check and create sqlite folder
+    if (!(await FileSystem.getInfoAsync(dbPath)).exists) {
+      console.log('creating SQLite folder ');
+      await FileSystem.makeDirectoryAsync(dbPath);
+    }
+    const downloadFilePath = Constants.getDbFilePath();
     const downloadResumable = FileSystem.createDownloadResumable(
       Constants.DB_URL,
       downloadFilePath,

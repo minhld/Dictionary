@@ -26,7 +26,7 @@ export default function App() {
           name="Dictionary" 
           component={Home} 
           options={{
-            title: 'English - Vietnamese',
+            title: 'Home',
             drawerIcon: ({focused, size}) => (
               <Icon
               name='home'

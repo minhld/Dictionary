@@ -17,10 +17,9 @@ const openCB = () => {
   console.log("Database OPENED");
 }
 
-
 export const loadDb = async () => {
-  console.log('loading DB...');
-  var dbPath = FileSystem.documentDirectory + Constants.DB_SQLITE_FOLDER + Constants.DB_FILENAME;
+  var dbPath = Constants.getDbFilePath();
+  console.log('loading DB ', dbPath);
 
   if (!(await FileSystem.getInfoAsync(dbPath)).exists) {
     console.log('SQLite folder does not exist');
@@ -28,6 +27,7 @@ export const loadDb = async () => {
   }
 
   db = SQLite.openDatabase(Constants.DB_FILENAME, '1.0', openCB, errorCB);
+  console.log(db);
 };
 
 export const unloadDb = async () => {
@@ -39,7 +39,8 @@ export const search = async (word, numOfWords) => {
   const SELECT_WORDS = "SELECT * FROM word_tbl WHERE word LIKE '" + word + "%' LIMIT " + numOfWords;
   try {
     db.transaction((tx) => {
-      tx.executeSql(SELECT_WORDS, [], (tx, results) => {        
+      tx.executeSql(SELECT_WORDS, [], (tx, results) => {
+        console.log(results);
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
