@@ -1,17 +1,11 @@
-import React, {useState, useEffect} from 'react';
-
-// Import all the components we are going to use
+import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-
-// Import Autocomplete component
 import Autocomplete from 'react-native-autocomplete-input';
-
 import * as db from './utils/DbUtils';
 
 class Home extends React.Component {
@@ -20,7 +14,6 @@ class Home extends React.Component {
     this.state = {
       keyword: null,
       suggestList: [],
-      query: null,
     };
   }
 
@@ -33,6 +26,12 @@ class Home extends React.Component {
   };
   
   searchWord = async (keywords) => {
+    if (keywords === '') {
+      this.setState({
+        suggestList: [],
+      });
+      return;
+    }
     db.search(keywords, 10, (suggestList) => {
       this.setState({
         suggestList: suggestList
@@ -42,21 +41,27 @@ class Home extends React.Component {
     });
   };
 
+  selectWord = (word) => {
+    this.setState({
+      keyword: word,
+      suggestList: [],
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <Autocomplete
-          data={['hello', 'there']}
-          // data={[]}
+          data={this.state.suggestList}
           // value={'atb'}
           // defaultValue={''}
           style={styles.input}
-          onChangeText={(keywords) => searchWord(keywords)}
-          placeholder="Enter the film title"
+          onChangeText={(keywords) => this.searchWord(keywords)}
+          placeholder="Enter keywords"
           renderItem={({item}) => (
-            // For the suggestion view
-            <TouchableOpacity
+            <TouchableOpacity style={{height: 30}}
               onPress={() => {
+                selectWord(item);
                 // setSelectedValue(item);
                 // setFilteredFilms([]);
               }}>
@@ -66,12 +71,8 @@ class Home extends React.Component {
             </TouchableOpacity>
           )}
         />
-        {/* <TextInput
-          style={styles.input}
-          placeholder="Keywords" 
-          onChangeText={text => this.searchWord(text)}/>  */}
-
         <Text style={{padding: 10, fontSize: 42}}>
+          {this.state.keyword}
         </Text>  
       </View>
     ); 
@@ -94,9 +95,10 @@ const styles = StyleSheet.create({
   },
   itemText: {
     // fontSize: 18,
+    height: 100,
     paddingTop: 5,
     paddingBottom: 5,
-    margin: 2,
+    margin: 10,
   }
 });
 
