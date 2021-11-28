@@ -53,23 +53,17 @@ class Home extends React.Component {
       <View style={styles.container}>
         <Autocomplete
           data={this.state.suggestList}
+          // data={['sedb', 'babs']}
+
           // value={'atb'}
           // defaultValue={''}
           style={styles.input}
           onChangeText={(keywords) => this.searchWord(keywords)}
           placeholder="Enter keywords"
-          renderItem={({item}) => (
-            <TouchableOpacity style={{height: 30}}
-              onPress={() => {
-                selectWord(item);
-                // setSelectedValue(item);
-                // setFilteredFilms([]);
-              }}>
-              <Text style={styles.itemText}>
-                  {item.title}
-              </Text>
-            </TouchableOpacity>
-          )}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx,
+            renderItem: ({ item }) => <Text style={styles.itemText} onPress={(text) => this.selectWord(text)}>{item}</Text>,
+          }}
         />
         <Text style={{padding: 10, fontSize: 42}}>
           {this.state.keyword}
@@ -86,19 +80,14 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    // margin: 12,
     borderWidth: 1,
-    // borderRadius: 8,
     padding: 10,
     borderColor: '#1f3c69',
     backgroundColor: '#fff',
   },
   itemText: {
-    // fontSize: 18,
-    height: 100,
-    paddingTop: 5,
-    paddingBottom: 5,
-    margin: 10,
+    height: 20,
+    margin: 8,
   }
 });
 
