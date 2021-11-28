@@ -35,21 +35,23 @@ export const unloadDb = async () => {
 
 };
 
-export const search = async (word, numOfWords) => {
+export const search = async (word, numOfWords, callback) => {
   const SELECT_WORDS = "SELECT * FROM word_tbl WHERE word LIKE '" + word + "%' LIMIT " + numOfWords;
+  var suggestList = [];
   try {
     db.transaction((tx) => {
       tx.executeSql(SELECT_WORDS, [], (tx, results) => {
-        console.log(results);
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
-          console.log(`word: ${row.word}, mean: ${row.mean}`);
+          suggestList.push(row.word);
         }
+        callback(suggestList);
       });
     });
   } catch (error) {
     console.error(error);
     throw Error('Failed to get suggestions for word ' + word);
+    return [];
   }
 };
