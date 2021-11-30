@@ -35,8 +35,16 @@ export const unloadDb = async () => {
 
 };
 
+const hex2a = (hexx) => {
+  var hex = hexx.toString();
+  var str = '';
+  for (var i = 0; i < hex.length; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  return str;
+}
+
 export const search = async (word, numOfWords, callback) => {
-  const SELECT_WORDS = "SELECT * FROM word_tbl WHERE word LIKE '" + word + "%' LIMIT " + numOfWords;
+  const SELECT_WORDS = "SELECT w.word, hex(w.av) as av, hex(w.dnpn) as dnpn, w.mean FROM word_tbl as w WHERE w.word LIKE '" + word + "%' LIMIT " + numOfWords;
   var suggestList = [];
   try {
     db.transaction((tx) => {
@@ -44,7 +52,9 @@ export const search = async (word, numOfWords, callback) => {
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
-          suggestList.push(row.word);
+          row.av = hex2a(row.av);
+          row.dnpn = hex2a(row.dnpn);
+          suggestList.push(row);
         }
         callback(suggestList);
       });

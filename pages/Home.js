@@ -26,58 +26,6 @@ class Home extends React.Component {
   componentWillUnmount = () => {
     db.unloadDb();
   };
-  
-
-  // unicodeFromBinary = async (inputString) => {
-  //   var twoByteGroups = /^(?:[01]{16})+$/;
-
-	// 	/* Remove all whitespace from the input string. */
-	// 	var binaryString = inputString.replace(/\s+/g, '');
-
-	// 	/*
-	// 		Ensure the binary string is a sequence of two-byte pairs
-	// 		in binary—i.e., groups of sixteen '0' or '1' digits.
-	// 	*/
-	// 	if (!twoByteGroups.test(binaryString)) {
-	// 		throw new TypeError('input must be a sequence of two-byte pairs in binary');
-	// 	}
-
-	// 	/* Convert the binary string into code points. */
-	// 	var unicodeString = "";
-	// 	for (var i = 0; i < binaryString.length; i += 16) {
-	// 		var first = Number.parseInt(binaryString.slice(i, i + 16), 2);
-
-	// 		/* Code unit is not a surrogate pair, so convert it. */
-	// 		if (first < 0xD800 || first > 0xDFFF) {
-	// 			unicodeString += String.fromCodePoint(first);
-	// 		}
-
-	// 		/* Elsewise, convert both halves of the surrogate pair. */
-	// 		else {
-	// 			/* Sanity check the high surrogate. */
-	// 			if (first < 0xD800 || first > 0xDBFF) {
-	// 				throw new RangeError('mismatched surrogate pair in input');
-	// 			}
-
-	// 			/* Increment the index and sanity check the length. */
-	// 			i += 16;
-	// 			if (i >= binaryString.length) {
-	// 				throw new Error('truncated surrogate pair in input');
-	// 			}
-
-	// 			/* Get the low surrogate and sanity check it. */
-	// 			var second = Number.parseInt(binaryString.slice(i, i + 16), 2);
-	// 			if (second < 0xDC00 || second > 0xDFFF) {
-	// 				throw new RangeError('mismatched surrogate pair in input');
-	// 			}
-
-	// 			unicodeString += String.fromCodePoint(first, second);
-	// 		}
-	// 	}
-
-	// 	/* Return the string. */
-	// 	return unicodeString;
-	// };
 
   searchWord = async (keywords) => {
     if (keywords === '') {
@@ -90,17 +38,17 @@ class Home extends React.Component {
     db.search(keywords, 10, (suggestList) => {
       this.setState({
         suggestList: suggestList,
-        suggestWords: ['he', 'she'], //suggestList.map((word) => {return word.word;}),
+        suggestWords: suggestList.map((word) => {return word.word;}),
       });
       var meaning = (suggestList[0] ? suggestList[0].av : '');
-      var decoder = new encoding.TextDecoder();
-      var meaningStr = decoder.decode(meaning);
+      // var decoder = new encoding.TextDecoder();
+      // var meaningStr = decoder.decode(meaning);
 
-      var uint8array = new TextEncoder().encode("¢");
-      var string = new TextDecoder().decode(uint8array);
-      console.log("something else ", string);
+      // var uint8array = new TextEncoder().encode("¢");
+      // var string = new TextDecoder().decode(uint8array);
+      // console.log("something else ", string);
 
-      console.log(meaning, meaningStr);
+      console.log(meaning, meaning);
 
     });
   };
