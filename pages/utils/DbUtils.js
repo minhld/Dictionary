@@ -44,7 +44,13 @@ const hex2a = (hexx) => {
 }
 
 export const search = async (word, numOfWords, callback) => {
-  const SELECT_WORDS = "SELECT w.word, hex(w.av) as av, hex(w.dnpn) as dnpn, w.mean FROM word_tbl as w WHERE w.word LIKE '" + word + "%' LIMIT " + numOfWords;
+  const SELECT_WORDS = "SELECT w.word, " 
+    + "hex(w.av) as av, " 
+    + "hex(w.dnpn) as dnpn, "
+    + "w.mean "
+    + "FROM word_tbl as w " 
+    + "WHERE w.word LIKE '" + word + "%' " 
+    + "LIMIT " + numOfWords;
   var suggestList = [];
   try {
     db.transaction((tx) => {

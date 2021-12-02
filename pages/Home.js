@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { WebView } from 'react-native-webview';
 import Autocomplete from 'react-native-autocomplete-input';
 import * as db from './utils/DbUtils';
-import * as encoding from 'text-encoding';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class Home extends React.Component {
   constructor(props) {
@@ -15,7 +16,6 @@ class Home extends React.Component {
     this.state = {
       keyword: null,
       suggestList: [],
-      suggestWords: [],
     };
   }
 
@@ -31,22 +31,14 @@ class Home extends React.Component {
     if (keywords === '') {
       this.setState({
         suggestList: [],
-        suggestWords: [],
       });
       return;
     }
     db.search(keywords, 10, (suggestList) => {
       this.setState({
         suggestList: suggestList,
-        suggestWords: suggestList.map((word) => {return word.word;}),
       });
       var meaning = (suggestList[0] ? suggestList[0].av : '');
-      // var decoder = new encoding.TextDecoder();
-      // var meaningStr = decoder.decode(meaning);
-
-      // var uint8array = new TextEncoder().encode("¢");
-      // var string = new TextDecoder().decode(uint8array);
-      // console.log("something else ", string);
 
       console.log(meaning, meaning);
 
@@ -55,11 +47,10 @@ class Home extends React.Component {
 
 
   selectWord = (word) => {
-    console.log('showing ', word);
+    console.log('showing ', word.word);
     this.setState({
       keyword: word,
       suggestList: [],
-      suggestWords: [],
     });
   };
 
@@ -67,7 +58,7 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Autocomplete
-          data={this.state.suggestWords}
+          data={this.state.suggestList}
           style={styles.input}
           onChangeText={(keywords) => this.searchWord(keywords)}
           placeholder="Enter keywords"
@@ -75,13 +66,18 @@ class Home extends React.Component {
             keyExtractor: (_, idx) => idx,
             renderItem: ({ item }) => 
               <TouchableOpacity onPress={() => this.selectWord(item)}>
-                <Text style={styles.itemText}>{item}</Text>
+                <Text style={styles.itemText}>{item.word}</Text>
               </TouchableOpacity>,
           }}
         />
-        <Text style={{padding: 10, fontSize: 42}}>
-          {this.state.keyword}
-        </Text>  
+        <ScrollView 
+          style={styles.textView} 
+          // originWhitelist={['*']}
+          scalesPageToFit={false}
+          source={{ html: this.state.keyword?.av }}/>
+        {/* <Text style={{padding: 10, fontSize: 42}}>
+          {this.state.keyword?.av}
+        </Text>   */}
       </View>
     ); 
   }
@@ -102,7 +98,11 @@ const styles = StyleSheet.create({
   itemText: {
     height: 20,
     margin: 8,
+  },
+  textView: {
+    fontSize: 30,
   }
+
 });
 
 export default Home;
