@@ -70,7 +70,7 @@ class Home extends React.Component {
               </TouchableOpacity>,
           }}
         />
-        <ScrollView 
+        <WebView 
           style={styles.textView} 
           // originWhitelist={['*']}
           scalesPageToFit={false}

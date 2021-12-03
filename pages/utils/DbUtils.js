@@ -45,7 +45,8 @@ const hex2a = (hexx) => {
 
 export const search = async (word, numOfWords, callback) => {
   const SELECT_WORDS = "SELECT w.word, " 
-    + "hex(w.av) as av, " 
+    // + "hex(w.av) as av, " 
+    + "w.av, " 
     + "hex(w.dnpn) as dnpn, "
     + "w.mean "
     + "FROM word_tbl as w " 
@@ -58,7 +59,7 @@ export const search = async (word, numOfWords, callback) => {
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
-          row.av = hex2a(row.av);
+          row.av = '' + row.av?.length; //hex2a(row.av);
           row.dnpn = hex2a(row.dnpn);
           suggestList.push(row);
         }
