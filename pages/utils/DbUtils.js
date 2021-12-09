@@ -35,19 +35,51 @@ export const unloadDb = async () => {
 
 };
 
-const hex2a = (hexx) => {
-  var hex = hexx.toString();
-  var str = '';
-  for (var i = 0; i < hex.length; i += 2)
-      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  return str;
+const convertUtf8ArrayToStr = (array) => {
+  var out, i, len, c;
+  var char2, char3;
+
+  out = "";
+  len = array.length;
+  i = 0;
+  while(i < len) {
+    c = array[i++];
+    switch(c >> 4)
+    { 
+      case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+        out += String.fromCharCode(c);
+        break;
+      case 12: case 13:
+        char2 = array[i++];
+        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+        break;
+      case 14:
+        char2 = array[i++];
+        char3 = array[i++];
+        out += String.fromCharCode(((c & 0x0F) << 12) |
+                      ((char2 & 0x3F) << 6) |
+                      ((char3 & 0x3F) << 0));
+        break;
+    }
+  }
+
+  return out;
+}
+
+const convertToUtf8 = (str) => {
+  var buf = new ArrayBuffer(str.length * 2);
+  var bufView = new Uint16Array(buf);
+  for (var i = 0, strLen = str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  const buff8Array = new Uint8Array(bufView.buffer, bufView.byteOffset, bufView.byteLength);
+  return convertUtf8ArrayToStr(buff8Array);
 }
 
 export const search = async (word, numOfWords, callback) => {
   const SELECT_WORDS = "SELECT w.word, " 
-    // + "hex(w.av) as av, " 
     + "w.av, " 
-    + "hex(w.dnpn) as dnpn, "
+    + "w.dnpn as dnpn, "
     + "w.mean "
     + "FROM word_tbl as w " 
     + "WHERE w.word LIKE '" + word + "%' " 
@@ -59,8 +91,8 @@ export const search = async (word, numOfWords, callback) => {
         var len = results.rows.length;
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
-          row.av = '' + row.av?.length; //hex2a(row.av);
-          row.dnpn = hex2a(row.dnpn);
+          row.av = convertToUtf8(row.av ? row.av : '');
+          row.dnpn = convertToUtf8(row.dnpn ? row.dnpn : '');
           suggestList.push(row);
         }
         callback(suggestList);

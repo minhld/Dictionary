@@ -47,7 +47,7 @@ class Home extends React.Component {
 
 
   selectWord = (word) => {
-    console.log('showing ', word.word);
+    console.log('showing ', word);
     this.setState({
       keyword: word,
       suggestList: [],
@@ -75,9 +75,6 @@ class Home extends React.Component {
           // originWhitelist={['*']}
           scalesPageToFit={false}
           source={{ html: this.state.keyword?.av }}/>
-        {/* <Text style={{padding: 10, fontSize: 42}}>
-          {this.state.keyword?.av}
-        </Text>   */}
       </View>
     ); 
   }
