@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Autocomplete from 'react-native-autocomplete-input';
+import { Tab, TabView } from "react-native-elements";
+
 import * as db from './utils/DbUtils';
 
 class Home extends React.Component {
@@ -30,6 +32,7 @@ class Home extends React.Component {
     if (keywords === '') {
       this.setState({
         suggestList: [],
+        index: 0,
       });
       return;
     }
@@ -49,8 +52,11 @@ class Home extends React.Component {
     this.setState({
       wordHtml: db.getHtml(word),
       suggestList: [],
+      index: 0,
     });
   };
+
+  
 
   render() {
     return (
@@ -68,6 +74,23 @@ class Home extends React.Component {
               </TouchableOpacity>,
           }}
         />
+        <Tab value={this.state.index} >
+          <Tab.Item title="recent" />
+          <Tab.Item title="favorite" />
+          <Tab.Item title="cart" />
+        </Tab>
+
+        <TabView value={this.state.index} >
+          <TabView.Item style={{ backgroundColor: "yellow", width: "100%" }}>
+            <Text h1>Recent</Text>
+          </TabView.Item>
+          <TabView.Item style={{ backgroundColor: "blue", width: "100%" }}>
+            <Text h1>Favorite</Text>
+          </TabView.Item>
+          <TabView.Item style={{ backgroundColor: "green", width: "100%" }}>
+            <Text h1>Cart</Text>
+          </TabView.Item>
+        </TabView>
         <WebView 
           style={styles.textView} 
           originWhitelist={['*']}
