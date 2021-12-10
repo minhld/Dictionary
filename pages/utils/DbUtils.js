@@ -79,7 +79,9 @@ const convertToUtf8 = (str) => {
 export const search = async (word, numOfWords, callback) => {
   const SELECT_WORDS = "SELECT w.word, " 
     + "w.av, " 
-    + "w.dnpn as dnpn, "
+    + "w.cnav, "
+    + "w.dnpn, "
+    + "w.aa, "
     + "w.mean "
     + "FROM word_tbl as w " 
     + "WHERE w.word LIKE '" + word + "%' " 
@@ -92,7 +94,9 @@ export const search = async (word, numOfWords, callback) => {
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
           row.av = convertToUtf8(row.av ? row.av : '');
+          row.cnav = convertToUtf8(row.cnav ? row.cnav : '');
           row.dnpn = convertToUtf8(row.dnpn ? row.dnpn : '');
+          row.aa = convertToUtf8(row.aa ? row.aa : '');
           suggestList.push(row);
         }
         callback(suggestList);
@@ -103,4 +107,13 @@ export const search = async (word, numOfWords, callback) => {
     throw Error('Failed to get suggestions for word ' + word);
     return [];
   }
+};
+
+export const getHtml = (word) => {
+  return '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body>'
+  + '<div style="color: #1c5c2c;">@' + word?.word + ': ' + word?.mean + '</div>'
+  + '<div>' + word?.av + '</div>'
+  + '<div>' + word?.cnav + '</div>'
+  + '<div>' + word?.dnpn + '</div>'
+  + '</body></html>';
 };

@@ -8,13 +8,12 @@ import {
 import { WebView } from 'react-native-webview';
 import Autocomplete from 'react-native-autocomplete-input';
 import * as db from './utils/DbUtils';
-import { ScrollView } from 'react-native-gesture-handler';
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      keyword: null,
+      wordHtml: '',
       suggestList: [],
     };
   }
@@ -45,11 +44,10 @@ class Home extends React.Component {
     });
   };
 
-
   selectWord = (word) => {
     console.log('showing ', word);
     this.setState({
-      keyword: word,
+      wordHtml: db.getHtml(word),
       suggestList: [],
     });
   };
@@ -66,15 +64,15 @@ class Home extends React.Component {
             keyExtractor: (_, idx) => idx,
             renderItem: ({ item }) => 
               <TouchableOpacity onPress={() => this.selectWord(item)}>
-                <Text style={styles.itemText}>{item.word}</Text>
+                <Text style={styles.itemText}>{item.word}: {item.mean}</Text>
               </TouchableOpacity>,
           }}
         />
         <WebView 
           style={styles.textView} 
-          // originWhitelist={['*']}
+          originWhitelist={['*']}
           scalesPageToFit={false}
-          source={{ html: this.state.keyword?.av }}/>
+          source={{ html: this.state.wordHtml }}/>
       </View>
     ); 
   }
