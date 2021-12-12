@@ -56,7 +56,11 @@ class Home extends React.Component {
     });
   };
 
-  
+  changeTabIndex = (index) => {
+    this.setState({
+      index: index,
+    });
+  };
 
   render() {
     return (
@@ -74,28 +78,30 @@ class Home extends React.Component {
               </TouchableOpacity>,
           }}
         />
-        <Tab value={this.state.index} >
-          <Tab.Item title="recent" />
-          <Tab.Item title="favorite" />
-          <Tab.Item title="cart" />
+        <Tab value={this.state.index} 
+          onChange={this.changeTabIndex} 
+          indicatorStyle={styles.indicatorTabStyle}>
+          <Tab.Item title="Basic" titleStyle={styles.basicTabTitle}/>
+          <Tab.Item title="English" titleStyle={styles.basicTabTitle}/>
+          <Tab.Item title="Wiki" titleStyle={styles.basicTabTitle}/>
         </Tab>
 
         <TabView value={this.state.index} >
-          <TabView.Item style={{ backgroundColor: "yellow", width: "100%" }}>
-            <Text h1>Recent</Text>
+          <TabView.Item style={styles.basicTab}>
+            <WebView 
+              style={styles.textView} 
+              originWhitelist={['*']}
+              scalesPageToFit={false}
+              source={{ html: this.state.wordHtml }}/>
           </TabView.Item>
-          <TabView.Item style={{ backgroundColor: "blue", width: "100%" }}>
+          <TabView.Item style={styles.englishTab}>
             <Text h1>Favorite</Text>
           </TabView.Item>
-          <TabView.Item style={{ backgroundColor: "green", width: "100%" }}>
+          <TabView.Item style={styles.wikiTab}>
             <Text h1>Cart</Text>
           </TabView.Item>
         </TabView>
-        <WebView 
-          style={styles.textView} 
-          originWhitelist={['*']}
-          scalesPageToFit={false}
-          source={{ html: this.state.wordHtml }}/>
+        
       </View>
     ); 
   }
@@ -117,10 +123,26 @@ const styles = StyleSheet.create({
     height: 20,
     margin: 8,
   },
+  indicatorTabStyle: {
+    backgroundColor: '#1f3c69',
+    height: 3,
+  },
+  basicTabTitle: {
+    fontSize: 15,
+    color: '#1f3c69',
+  },
+  basicTab: {
+    width: '100%',
+  },
+  englishTab: {
+    width: '100%',
+  },
+  wikiTab: {
+    width: '100%',
+  },
   textView: {
     fontSize: 30,
-  }
-
+  },
 });
 
 export default Home;
