@@ -17,6 +17,7 @@ class Home extends React.Component {
     this.state = {
       wordHtml: '',
       suggestList: [],
+      index: 0,
     };
   }
 
