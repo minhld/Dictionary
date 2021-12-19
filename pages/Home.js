@@ -12,7 +12,6 @@ import * as Constants from './utils/Constants';
 import * as db from './utils/DbUtils';
 
 class Home extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -68,9 +67,26 @@ class Home extends React.Component {
 
   changeContainerStyle = (index) => {
     return {
-      backgroundColor: (this.state.index === index ? Constants.colors.lightBlue : Constants.colors.background),
+      backgroundColor: (this.state.index === index 
+        ? Constants.colors.lightBlue 
+        : Constants.colors.background),
     };
   };
+
+  changeUrl = async (event) => {
+    if (event.url !== 'about:blank') {
+      const keyword = event.url;
+      console.log('seach ', keyword);
+      db.search(keyword, 1, (suggestList) => {
+        const foundWord = suggestList[0];
+        console.log('found word ', foundWord?.word);
+        this.setState({
+          wordHtml: db.getHtml(foundWord),
+          selectedWord: foundWord?.word,
+        });
+      });
+    }
+  }
 
   render() {
     return (
@@ -109,6 +125,7 @@ class Home extends React.Component {
               style={styles.textView} 
               originWhitelist={['*']}
               scalesPageToFit={false}
+              onNavigationStateChange={this.changeUrl}
               source={{ html: this.state.wordHtml }}/>
           </TabView.Item>
           <TabView.Item style={styles.englishTab}>
