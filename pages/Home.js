@@ -10,6 +10,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import { Tab, TabView } from "react-native-elements";
 import * as Constants from './utils/Constants';
 import * as db from './utils/DbUtils';
+import * as dictApi from './utils/DictAPI';
 
 class Home extends React.Component {
   constructor(props) {
